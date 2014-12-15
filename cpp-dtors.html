@@ -1,0 +1,54 @@
+<h2>Just a friendly reminder to declare your destructors virtual in non-final classes in C++</h2>
+<p>There was a thread on HackerNews sharing someones C++ algorithms & data structures repository.  In the comments, someone pointed out that the abstract structure <code>Tree</code> didn't have a virtual destructor.  This is a quick writeup showing how that can lead to fun memory leaks.</p>
+<p>Let's work with this code:</p>
+
+<code><pre>
+#include &lt;stdio.h&gt;
+
+class Base
+{
+public:
+
+    Base()
+    {
+        printf("Base Ctor\n");
+    }
+
+    ~Base()
+    {
+        printf("Base Dtor\n");
+    }
+};
+
+class Derived : public Base
+{
+public:
+
+    Derived() : Base()
+    {
+        printf("Derived Ctor\n");
+    }
+
+    ~Derived()
+    {
+        printf("Derived Dtor\n");
+    }
+};
+
+int main(int argc, char* args[])
+{
+    Base* b = new Derived;
+    delete b;
+    return 0;
+}
+</pre></code>
+
+<p>Compiling & running the code should give you this:</p>
+<code><pre>
+Base Ctor
+Derived Ctor
+Base Dtor
+</pre></code>
+
+<p>See what happens?  The Derived destructor gets cut off, and the Derived class leaks memory.</p>
+<p>Stay safe this holiday season, and always declare your non-final classes' destructors virtual, kids.</p>

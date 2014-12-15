@@ -1,0 +1,69 @@
+<h1>Quick & trivial promise implementation using jQuery</h1>
+<h2>Promises are a synchronous solution to an asynchronous problem</h2>
+<p>Sometimes, you'll have procedurally written code in an async environment (especially when you're just starting out with node.js or jQuery).  For example: </p>
+<code><pre>
+var myParagraph = $('<p id="my-paragraph">');
+function myFunction() {
+  /* let's say that you make an asynchronous AJAX call, whereupon its completion we append a DOM element to the body with an id of 'my-paragraph' */
+  $.ajax({
+    url: 'some_script.php'
+  })
+
+  /* 
+  * then you write some code in a standard procedural style and forget about that new paragraph for a while...
+  */
+
+  /* now we want to do something with the paragraph that we had appended earlier - but wait! */
+  $("p#my-paragraph").html('HEY THERE');
+
+  /* 
+  *  this (probably) won't do anything - the $.ajax function is asynchronous, so if it'll start and end on its own time.  
+  *  what if the rest of the script body gets executed before the $.ajax call is done? 
+  *  since we didn't append p#my-paragraph until the $.ajax call is finished, this line will fail.  
+  *  what's more is that it will fail silently, because jQuery will eat up the error.
+  */
+}
+</pre></code>
+
+<p>Now, with promises, we can amend this:</p>
+<code><pre>
+function myFunction(){    
+    var promise = $.ajax({
+      url: 'some_script.php'
+    });
+    
+    /* since we've wrapped this in .always(), this code will only get called once the AJAX call has returned (whether it failed or not) */
+    promise.always(function() {
+      $("p#my-paragraph").html("HEY THERE");
+    });
+    
+    /* jQuery's then() function can take two separate functions for success & failure, whereas always() will be called regardless */
+    promise.then(function(){
+      console.log("this will be executed first on success...");
+    }, function() {
+      console.log("this will be executed first on failure...");
+    }).then(function() {
+      console.log("and this, second on success");
+    }, function() {
+      console.log("and this, second on failure");
+    });
+}
+</pre></code>
+
+<p>
+The difference between promises and callbacks is that this:
+<code><pre>
+promise.then(firstAsyncFunction)
+       .then(secondAsynFunction);
+</pre></code>
+is much prettier than this:
+<code><pre>
+firstAsyncFunction(function() {
+  return secondAsyncFunction(function() {
+    lastFunction();
+  });
+});
+</pre></code>
+
+http://stackoverflow.com/questions/14244775/what-is-the-difference-between-callback-and-promise
+

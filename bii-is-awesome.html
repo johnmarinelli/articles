@@ -1,0 +1,62 @@
+<h1>Bii is an awesome dependency manager for C++.</h1>
+<h2>As a C++ developer, I know how annoying it is to hunt down libraries, install them, link them, and pray that you're given a good .obj file.  Bii solves this problem, and creates a nice environment for C++ to update and share code.  On top of that, Bii has a great community and is stupid-simple.</h2>
+
+<p>I just managed to build to build & show an SDL2 Hello World app in just a few minutes with Bii - something that could easily have taken 20-30 minutes (or an hour, if you're like me).  The beautiful thing about it is that it's very intuitive.  The <code>bii find</code> command is super handy; all you do is <code>#include</code> a block in your .cpp file, and bii will find the corresponding block for you.</p>
+
+<p>
+Here's an example of building an SDL2 Hello World app with bii (assuming you've got it installed already).  This was built on Linux Mint 17 Qiana, using Bii 1.11.</p>
+
+<p>
+First, <code>bii init SDL2</code> in a directory.  This will create a new folder, SDL2, with "blocks", "bii", and "deps" subdirectories.  Now <code>cd</code> into your SDL2 directory, and <code>mkdir -p blocks/&lt;USERNAME&gt;/sdl2</code>.  Write a quick main.cpp file in this directory:
+
+<code><pre>
+
+#include "miguel/sdl2/include/SDL.h"
+#include &lt;stdio&gt;
+
+const int SCREEN_WIDTH = 640;
+const int SCREEN_HEIGHT = 480;
+
+int main(int argc, char* args[])
+{
+    SDL_Window* window = NULL;
+
+    SDL_Surface* screenSurface = NULL;
+
+    if(SDL_Init(SDL_INIT_VIDEO) < 0) {
+        printf("SDL couldn't initialize.");
+    }   
+
+    else {
+        window = SDL_CreateWindow("SDL Skeleton", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+
+        if(NULL == window) {
+            printf("Window is null.");
+        }
+
+        else {
+            screenSurface = SDL_GetWindowSurface(window);
+
+            SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0xff, 0xff, 0xff)); 
+
+            SDL_UpdateWindowSurface(window);
+
+            SDL_Delay(2000);
+        }
+    }   
+
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+
+    return 0;
+}
+
+</pre></code>
+
+Now, all you have to do is <code>bii find</code>, and bii will locate the SDL2 block for you.  Next, do <code>bii cpp:build</code>, and you can see SDL being compiled & linked against your program.  The executable will be in SDL2/bin.
+
+</p>
+
+<p>
+to be honest, all I wanted out of this was the shirt, and that's what I was gunning for originally.  However, using it made me really excited - imagine simply typing in #include "path/to/opengl" and being able to use OpenGL without the scary linker and compiler errors!<br/>This is truly the future of C++ dev, and frankly, America.  consider me enthused.
+</p>

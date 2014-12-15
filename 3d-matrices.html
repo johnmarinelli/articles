@@ -1,0 +1,30 @@
+<h1>Matrices involved in rendering a 3d scene on a 2d surface</h1>
+
+<h2>3d programming involves a lot of linear algebra and matrix math.  I used to only skim through the parts of books/tutorials that talk about the model/view/projection matrices and the process that each 3d vertex goes through to get to a 2d position, but I recently read more into them and found that knowing how it works is very valuable (of course).</h2>
+
+<p>
+Since there is no 3d space on a computer, we imagine an abstract 3d figure with x, y, z coordinates.  The matrix that does basic transformations with this figure in the local space is called the Model Matrix. 
+</p>
+
+<p>
+So, let's say we have some cube existing at the origin.  The Model Matrix will rotate, translate, and scale the cube, and place the cube into our World Space.  Once again, there is no 3d space on a computer, but we express a made-up 3d space for our 3d object to live in and call it the World Space. 
+</p>
+
+<p>
+After placing our 3d figure into our 3d world, we we need to have some sort of way of viewing it.  This will be solved by an imaginary camera, and this camera will have its own coordinate space that's expressed with a View Matrix (or Eye Matrix or Camera Matrix).  This matrix' axes are traditionally described as folows:
+<ul>
+<li>The X axis is increasing to the right.</li>
+<li>The Y axis is increasing upwards.</li>
+<li>The Z axis is increasing towards the viewer.</li>
+</ul>
+
+If you make a finger gun, the barrel would be X axis, the hammer would be the Y axis, and the butt would be the Z axis.
+</p>
+
+<p>
+Finally, we can start throwing our imaginary 3d objects and camera onto a 2d screen using the Projection Matrix.  This is done by first defining a frustum: an imaginary plane containing points that express where the viewing area is limited to, and which objects are near/far to the viewer.  Implementation-wise, this matrix would belong to the Camera.
+</p>
+
+<p>
+Now our object has gone from its local coordinates to world coordinates (Model Matrix), to a space in our 3d world (View Matrix), to a clipped and projected version (Projection Matrix).  The coordinate stuff is done, and now the objects' vertices and faces will be shaded, which calls for another writeup.
+</p>
